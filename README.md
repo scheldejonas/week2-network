@@ -1,4 +1,4 @@
-# Week 1: Concurrency
+# Week 2: Networking
 For the networking part we will explore the entire network stack from the bits in your computer to routers sending IP packages, orchestrated by huge internet exchange points, to finally run through undersea cables across the globe. This part will give you an understanding of how networks work and how you can use this when developing web services.
 
 This part also covers HTTP and HTTPS (the standard protocols you use to navigate the internet), and some basic security measures to keep your services and data safe.
