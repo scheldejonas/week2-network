@@ -1,8 +1,9 @@
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetSocketAddress;
-import java.net.SocketException;
+import java.net.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * <h2>Task 1</h2>
@@ -22,12 +23,14 @@ import java.net.SocketException;
  *     sent (and how much isn't). That's the drawback of this approach. On the other hand it's fast!
  * </p>
  */
-public class UdpServer implements Runnable {
+public class UdpServer {
 
     private static final byte[] DATA_BUFFER = new byte[10];
 
-    @Override
-    public void run() {
+    public UdpServer() {
+    }
+
+    public void startServer() {
         // TODO 1. Create a UDP server that binds (listens) to a port
 
         DatagramSocket datagramSocket = null;
@@ -39,7 +42,7 @@ public class UdpServer implements Runnable {
         }
 
         try {
-            datagramSocket.bind(new InetSocketAddress("localhost",7070));
+            datagramSocket.bind(new InetSocketAddress("localhost",8080) );
         } catch (SocketException e) {
             e.printStackTrace();
         }
@@ -48,26 +51,76 @@ public class UdpServer implements Runnable {
 
         byte[] buffer = new byte[10];
 
-        DatagramPacket datagramPacket = new DatagramPacket(buffer,buffer.length);
+        DatagramPacket datagramRecievePacket = new DatagramPacket(buffer,buffer.length);
+
+        ThreadFactory threadFactory = Executors.defaultThreadFactory();
+
+        ExecutorService executorService = Executors.newFixedThreadPool(128,threadFactory);
 
         try {
             while (true) {
 
-                datagramSocket.receive(datagramPacket);
+                datagramSocket.receive(datagramRecievePacket);
 
-                System.out.printf("Printing data...: \n %s", datagramPacket.getData().length);
+                executorService.execute(new ConnectionProcess(datagramRecievePacket,datagramSocket));
 
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            // TODO: Wait for the thread to finish before the program stops by Exceptions
+            executorService.shutdown();
         }
 
-        // TODO 3. Print the data!
     }
 
-    public static void main(String[] args) throws IOException {
-        // Run the udp server in a thread here
-        // Wait for the thread to finish before the program stops
+    class ConnectionProcess extends Thread {
+
+        private DatagramPacket datagramPacket;
+        private DatagramSocket datagramSocketServer;
+        private ReentrantLock reentrantLock;
+
+        public ConnectionProcess(DatagramPacket datagramPacket, DatagramSocket datagramSocketServer) {
+            this.datagramPacket = datagramPacket;
+            this.datagramSocketServer = datagramSocketServer;
+            this.reentrantLock = new ReentrantLock();
+        }
+
+        @Override
+        public void run() {
+
+            try {
+                reentrantLock.lock();
+
+                String recieveText = new String(datagramPacket.getData());
+
+                // TODO 3. Print the data!
+
+                System.out.printf("Printing data...: \n %s", recieveText);
+
+                InetAddress sendBackInetIpAddress = datagramPacket.getAddress();
+
+                int sendBackPort = datagramPacket.getPort();
+
+                String confirmSentence = "I have recieved you message";
+
+                byte[] sendDataByteArray = new byte[confirmSentence.length()];
+
+                sendDataByteArray = confirmSentence.getBytes();
+
+                DatagramPacket sendDatagramPacket = new DatagramPacket(sendDataByteArray,sendDataByteArray.length,sendBackInetIpAddress,sendBackPort);
+
+                try {
+                    datagramSocketServer.send(sendDatagramPacket);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            } finally {
+                reentrantLock.unlock();
+            }
+
+        }
     }
 
 }

@@ -23,18 +23,27 @@ import java.net.SocketException;
 public class UdpClient {
 
     // This is horrifyingly hilariously bad movie
-    private static final byte[] MESSAGE =
+    private final byte[] MESSAGE =
             "We are all interested in the future, for that is where you and I will spend the rest of our lives!".getBytes(); // Plan 9 from Outer Space"
 
-    public static void main(String[] args) throws SocketException {
+    public UdpClient() {
+    }
+
+    public void sendMessageToUdpServer() {
         // TODO: 1. Create a socket and connect it to the server
 
-        DatagramSocket datagramSocketClient = new DatagramSocket();
+        DatagramSocket datagramSocketClient = null;
+        try {
+            datagramSocketClient = new DatagramSocket();
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
 
-        datagramSocketClient.connect(new InetSocketAddress("localhost",7070));
-
-        // TODO: 2. Try to start the socket without the server. Do you get an exception? Why/Why not?
-        // TODO: 3. Start the server and send the message from above to the server. What are you receiving?
+        try {
+            datagramSocketClient.connect(new InetSocketAddress("localhost",8080));
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
 
         DatagramPacket datagramPacket = new DatagramPacket(MESSAGE,MESSAGE.length);
 
@@ -43,7 +52,6 @@ public class UdpClient {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
 }
