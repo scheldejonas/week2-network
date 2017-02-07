@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
@@ -26,9 +27,23 @@ public class UdpClient {
             "We are all interested in the future, for that is where you and I will spend the rest of our lives!".getBytes(); // Plan 9 from Outer Space"
 
     public static void main(String[] args) throws SocketException {
-        // 1. Create a socket and connect it to the server
-        // 2. Try to start the socket without the server. Do you get an exception? Why/Why not?
-        // 3. Start the server and send the message from above to the server. What are you receiving?
+        // TODO: 1. Create a socket and connect it to the server
+
+        DatagramSocket datagramSocketClient = new DatagramSocket();
+
+        datagramSocketClient.connect(new InetSocketAddress("localhost",7070));
+
+        // TODO: 2. Try to start the socket without the server. Do you get an exception? Why/Why not?
+        // TODO: 3. Start the server and send the message from above to the server. What are you receiving?
+
+        DatagramPacket datagramPacket = new DatagramPacket(MESSAGE,MESSAGE.length);
+
+        try {
+            datagramSocketClient.send(datagramPacket);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }

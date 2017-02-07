@@ -28,9 +28,41 @@ public class UdpServer implements Runnable {
 
     @Override
     public void run() {
-        // 1. Create a UDP server that binds (listens) to a port
-        // 2. Wait for some data to arrive
-        // 3. Print the data!
+        // TODO 1. Create a UDP server that binds (listens) to a port
+
+        DatagramSocket datagramSocket = null;
+
+        try {
+            datagramSocket = new DatagramSocket();
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            datagramSocket.bind(new InetSocketAddress("localhost",7070));
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+
+        // TODO 2. Wait for some data to arrive
+
+        byte[] buffer = new byte[10];
+
+        DatagramPacket datagramPacket = new DatagramPacket(buffer,buffer.length);
+
+        try {
+            while (true) {
+
+                datagramSocket.receive(datagramPacket);
+
+                System.out.printf("Printing data...: \n %s", datagramPacket.getData().length);
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // TODO 3. Print the data!
     }
 
     public static void main(String[] args) throws IOException {
