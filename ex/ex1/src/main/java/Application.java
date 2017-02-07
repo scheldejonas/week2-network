@@ -20,9 +20,9 @@ public class Application {
 
         udpServerOne.startServer();
 
-//        UdpClient udpClient = new UdpClient();
-//
-//        udpClient.sendMessageToUdpServer();
+        UdpClient udpClient = new UdpClient();
+
+        udpClient.sendMessageToUdpServer();
 
     }
 }
