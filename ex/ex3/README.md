@@ -46,14 +46,45 @@ the ``IP`` ``10.10.10.10``. This is also really handy when working and debugging
 Install the certificate on the server now by following the instructions on the certbot site above.
 
 ## Assignment 4: Installing the certificate in Nginx
-The guide above should tell you how to install it into the Nginx configuration file. Now that you
+Now that you
 have your certificate on your machine (you should have gotten this in the step above), you have to
 1) include it in the Nginx configuration file and 2) re-route all traffic on port 80 to port 443.
-If you haven't already done it, do it now by following the guide on the certbot site above.
+
+First of all, let's include your certificates in Nginx. From the step above you should have a 
+certificate in the folder ``/etc/letsencrypt/live/[IP].xip.io/`` (where ``[IP]`` is the IP of the
+server. Here you'll find two important files: your public key and your private key. The public
+key is in the file ``fullchain.pem`` (``.pem`` for permission) and your private key is in
+``privkey.pem``. Never _ever_ **ever** move your private key outside of your server. Ever.
+
+### 4.1 Enabling TLS/SSL 
+
+So, first of all you need to tell Nginx to enable TLS/SSL. Go to the Nginx configuration file at
+``/etc/nginx/sites-enabled/default`` and look at line 17:
+
+    listen 80 default_server;
+    
+Change this to listen to port 443 and append ``ssl`` after the port. So the line should say:
+
+    listen XXX ssl default_server;
+    
+Where XXX is the port for HTTPS traffic. _Actually_ this is already in the file in line 22. So an
+alternative to above is to comment out the line listening to port 80 and comment in the line 22.
+Choose one :-)
+
+### 4.2 Using your certificate
+Next we need to tell Nginx where to find the certificates we just created. After your ``listen``
+code (somewhere after line 23, where doesn't really matter), create a new line saying:
+
+    ssl on;
+    ssl_certificate /etc/letsencrypt/live/XX.XX.XX.XX.xip.io/fullchain.pem
+    ssl_certificate_key /etc/letsencrypt/live/XX.XX.XX.XX.xip.io/privkey.pem
+
+Where ``XX.XX.XX.XX`` is the IP of your server. Save the file. Then restart the server with the
+command ``sudo service nginx restart``.
 
 ## Conclusion
 If you successfully made all of the above steps, you now have a secure and verified connection to
-your server! Try to make a `HTTP GET`` request to your server in your browser, and see the beautiful
+your server! Try to make a `HTTPS GET`` request to your server in your browser, and see the beautiful
 green lock left of the address bar.
  
 Well done!
