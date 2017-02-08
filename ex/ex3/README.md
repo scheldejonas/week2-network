@@ -52,7 +52,7 @@ have your certificate on your machine (you should have gotten this in the step a
 
 First of all, let's include your certificates in Nginx. From the step above you should have a 
 certificate in the folder ``/etc/letsencrypt/live/[IP].xip.io/`` (where ``[IP]`` is the IP of the
-server. Here you'll find two important files: your public key and your private key. The public
+server). Here you'll find two important files: your public key and your private key. The public
 key is in the file ``fullchain.pem`` (``.pem`` for permission) and your private key is in
 ``privkey.pem``. Never _ever_ **ever** move your private key outside of your server. Ever.
 
@@ -63,13 +63,13 @@ So, first of all you need to tell Nginx to enable TLS/SSL. Go to the Nginx confi
 
     listen 80 default_server;
     
-Change this to listen to port 443 and append ``ssl`` after the port. So the line should say:
+Change this to listen to the ``HTTPS`` port and append ``ssl`` after the port. So the line should say:
 
     listen XXX ssl default_server;
     
 Where XXX is the port for HTTPS traffic. _Actually_ this is already in the file in line 22. So an
-alternative to above is to comment out the line listening to port 80 and comment in the line 22.
-Choose one :-)
+alternative to above is to comment out the line listening to port 80 (line 17) and comment in the line 22.
+Do not write the line above _and_ comment out line 22. Choose one :-)
 
 ### 4.2 Using your certificate
 Next we need to tell Nginx where to find the certificates we just created. After your ``listen``
