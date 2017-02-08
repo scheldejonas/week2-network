@@ -76,11 +76,24 @@ Next we need to tell Nginx where to find the certificates we just created. After
 code (somewhere after line 23, where doesn't really matter), create a new line saying:
 
     ssl on;
-    ssl_certificate /etc/letsencrypt/live/XX.XX.XX.XX.xip.io/fullchain.pem
-    ssl_certificate_key /etc/letsencrypt/live/XX.XX.XX.XX.xip.io/privkey.pem
+    ssl_certificate /etc/letsencrypt/live/XX.XX.XX.XX.xip.io/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/XX.XX.XX.XX.xip.io/privkey.pem;
 
 Where ``XX.XX.XX.XX`` is the IP of your server. Save the file. Then restart the server with the
 command ``sudo service nginx restart``.
+
+Write two lines about:
+
+1. The difference between the ``fullchain.pem`` and ``privkey.pem`` file.
+2. Why is there no longer traffic on port 80?
+
+**Please note:** If you used the ``--test-cert`` **you will get a warning**. And that's fine. If you 
+want to fix it, try running ``letsencrypt`` again, but without the ``--test-cert`` command to get a
+new non-test certificate.
+
+### 4.3 (Optional) Redirecting HTTPtraffic to HTTPS
+If you'd like to do something extra, you can try to re-route regular ``HTTP`` traffic to the ``HTTPS`` port.
+There's a nice tutorial on what to do here: [https://www.cyberciti.biz/faq/linux-unix-nginx-redirect-all-http-to-https/](https://www.cyberciti.biz/faq/linux-unix-nginx-redirect-all-http-to-https/)
 
 ## Conclusion
 If you successfully made all of the above steps, you now have a secure and verified connection to
