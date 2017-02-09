@@ -3,6 +3,9 @@
 out
 *.iml
 
+target/
+nb-configuration.xml
+
 # Created by https://www.gitignore.io/api/netbeans,java
 
 ### NetBeans ###
