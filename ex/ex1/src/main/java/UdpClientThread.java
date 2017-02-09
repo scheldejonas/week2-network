@@ -3,6 +3,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * <h2>Task 2</h2>
@@ -20,38 +21,45 @@ import java.net.SocketException;
  * received.
  * </p>
  */
-public class UdpClient {
+public class UdpClientThread implements Runnable {
 
     // This is horrifyingly hilariously bad movie
     private final byte[] MESSAGE =
             "We are all interested in the future, for that is where you and I will spend the rest of our lives!".getBytes(); // Plan 9 from Outer Space"
 
-    public UdpClient() {
+    private final ReentrantLock reentrantLock;
+
+    public UdpClientThread(ReentrantLock reentrantLock) {
+        this.reentrantLock = reentrantLock;
+    }
+
+    @Override
+    public void run() {
+        sendMessageToUdpServer();
     }
 
     public void sendMessageToUdpServer() {
         // TODO: 1. Create a socket and connect it to the server
 
-        DatagramSocket datagramSocketClient = null;
         try {
-            datagramSocketClient = new DatagramSocket();
-        } catch (SocketException e) {
-            e.printStackTrace();
+            reentrantLock.lock();
+
+            DatagramPacket datagramPacket = new DatagramPacket(MESSAGE,MESSAGE.length);
+
+            try {
+                DatagramSocket datagramSocketClient = new DatagramSocket();
+                datagramSocketClient.connect(new InetSocketAddress("localhost",8080));
+                datagramSocketClient.send(datagramPacket);
+            } catch (SocketException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        } finally {
+            reentrantLock.unlock();
         }
 
-        try {
-            datagramSocketClient.connect(new InetSocketAddress("localhost",8080));
-        } catch (SocketException e) {
-            e.printStackTrace();
-        }
-
-        DatagramPacket datagramPacket = new DatagramPacket(MESSAGE,MESSAGE.length);
-
-        try {
-            datagramSocketClient.send(datagramPacket);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
 }

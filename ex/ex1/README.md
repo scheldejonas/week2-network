@@ -1,8 +1,8 @@
 # Network exercises 1
 
 ## Task 1
-* Implement a UDP server in the ``UdpServer.java`` file.
-* Implement a Udp client in the ``UdpClient.java`` file.
+* Implement a UDP server in the ``UdpServerThread.java`` file.
+* Implement a Udp client in the ``UdpClientThread.java`` file.
 
 ## Task 2: Network interfaces
 In a terminal run
