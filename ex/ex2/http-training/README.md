@@ -342,8 +342,195 @@ Change the forms method-attribute to the value “POST” and test the form.
 
 Observe the change in your browsers address field. See whether you can find out, how the parameters are passed in, for a POST request.
 
-Make sure you understand the difference between GET and POST, also the non-idempotent part.
+__Make sure you understand the difference between GET and POST, also the non-idempotent part.__
 
 - Solution
 
+I implementet this code
+
 ```
+        <div class="row">
+            <form method="get" action="#" class="col s12">
+                <input type="hidden" name="hidden" value="12345678" />
+                <div class="row">
+                    <div class="input-field col s6">
+                        <input id="first_name" name="firstName" type="text" class="validate" />
+                        <label for="first_name">First Name</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <input id="last_name" name="lastName" type="text" class="validate" />
+                        <label for="last_name">Last Name</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s12 ">
+                        <button class="btn waves-effect waves-light" type="submit" name="action">Submit
+                            <i class="material-icons right">send</i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="row">
+            <form method="post" action="#" class="col s12">
+                <input type="hidden" name="hidden" value="12345678" />
+                <div class="row">
+                    <div class="input-field col s6">
+                        <input id="first_name" name="firstName"  type="text" class="validate" />
+                        <label for="first_name">First Name</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <input id="last_name" name="lastName" type="text" class="validate" />
+                        <label for="last_name">Last Name</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col s12 ">
+                        <button class="btn waves-effect waves-light" type="submit" name="action">Submit
+                            <i class="material-icons right">send</i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+```
+
+I found out on the get method this came:
+
+http://localhost:8080/index?hidden=12345678&firstName=Jonas&lastName=Schelde&action=#
+
+I found out on the post method this came:
+ 
+http://localhost:8080/index?hidden=12345678&firstName=Jonas&lastName=Schelde&action=#
+ 
+So my conclusion is the url Query String Parameters is the same. But how do it send the names?
+ 
+Lokking to the network tab, in chrome dev tools, i see that there is the form data, sent on POST
+
+Which means it can me catchable from the body data, instead of the url parameters.
+
+Which means post can send parameters and values in the body of the request, in opposite to get request.
+
+---
+
+##### Session and Cookies
+
+For the next two exercises/demoes you should create a new web-project.
+
+Both the demoes uses a Servlet and this will hopefully be the last time where you will use a Servlet for presentation 
+
+Sessions (Session Cookies) Class exercise/demo
+
+1. In your web project use the wizard to generate a new Servlet
+
+2. Enter SessionDemo as the name of the Servlet and servlets as package name
+
+3. Right click the file and select Run to see “what is does”
+
+4. Change the generated processRequest(..) method as sketched below.
+
+```
+protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+  String name = request.getParameter("name");
+  if (name != null) {
+   request.getSession().setAttribute("name", name);
+  } else {
+   name = (String) request.getSession().getAttribute("name");
+  }
+  response.setContentType("text/html;charset=UTF-8");
+  try (PrintWriter out = response.getWriter()) {
+   out.println("<!DOCTYPE html>");
+   out.println("<html>");
+   out.println("<head>");
+   out.println("<title>Servlet SessionDemo</title>");
+   out.println("</head>");
+   out.println("<body>");
+   if (name != null) {
+    name = (String) request.getSession().getAttribute("name");
+    out.println("<p> Welcome " + name + " !</p>");
+   } else {
+    out.println("<h2>Please enter your name, and submit</h2>");
+    out.println("<form action='SessionDemo'>");
+    out.println("<input type='input' name='name'>");
+    out.println("<input type='submit'></form>");
+   }
+   out.println("</body>");
+   out.println("</html>");
+  }
+}
+```
+
+5. Enter your name and press submit, copy the URL in the browser into your clipboard, close the tab (but not the browser) and load the page again in a new tab using the URL in the clipboard.
+
+6. While doing the things in step e, you should monitor the content of your local cookies and the HTTP requests being sent, using the development tools in Chrome.
+
+7. Most import part of this exercise:
+
+Explain (on paper) using both words and images how the Server can maintain state between subsequent calls even when using a stateless protocol
+
+The posibillity is here that with the same url, it takes the same cookie ID even thoug i change tab.
+
+And there for because html is stateless, it makes it possible to keep a session, which makes it have a sort of state, when on a web domain as user. through the cookie id,
+stashed on your local computer.
+
+---
+
+##### Persistent Cookies
+
+- Question
+
+1. In your web project use the wizard to generate a new servlet
+2. Enter CookieDemo as the name of the Servlet and servlets as package name
+3. Change the generated processRequest(..) method as sketched below.
+
+```
+protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+ String name = request.getParameter("name");
+ if (name != null) {
+  Cookie cookie = new Cookie("username", name);
+  cookie.setMaxAge(60 * 60 * 24 * 365);
+  response.addCookie(cookie);
+ }
+ Cookie[] cookies = request.getCookies();
+ if (cookies != null) {
+  for (Cookie cookie: request.getCookies()) {
+   if (cookie.getName().equals("username")) {
+    name = cookie.getValue();
+   }
+  }
+ }
+ response.setContentType("text/html;charset=UTF-8");
+ try (PrintWriter out = response.getWriter()) { /* TODO output your page here. You may use following sample code. */
+  out.println("<!DOCTYPE html>");
+  out.println("<html>");
+  out.println("<head>");
+  out.println("<title>Servlet CookieDemo</title>");
+  out.println("</head>");
+  out.println("<body>");
+  if (name != null) {
+   out.println("<p> Welcome " + name + " !</p>");
+  } else {
+   out.println("<h2>Please enter your name, and submit</h2>");
+   out.println("<form action='CookieDemo'>");
+   out.println("<input type='input' name='name'>");
+   out.println("<input type='submit'></form>");
+  }
+  out.println("</body>");
+  out.println("</html>");
+ }
+}
+```
+
+4. Enter your name and press submit, copy the URL in the browser into your clipboard, close the tab (but not the browser) and load the page again in a new tab using the URL in the clipboard.
+
+5. Now close your browser (you could even close your laptop, but don’t ;-) , open it again and load the page again using the URL in the clipboard
+
+6. While doing the things in step e, you should monitor the content of your local cookies and the HTTP requests being sent, using the development tools in Chrome.
+
+7. Most import part of this exercise:
+
+8. Explain (on paper) how Cookies can be used to maintain “state” on the client between subsequent calls to a server, even when a browser has been closed down.
+
+- Solution
+
+Cookies, can be used to know what is recieved from the server before.
