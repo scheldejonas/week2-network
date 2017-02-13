@@ -15,6 +15,13 @@ note that the exercises _will_ build on previous material. So _please_ at least 
 a look at them every day and make sure you feel comfortable with them. If you do not
 we guarantee you it will be harder to catch up later in the semester.
 
+## Nginx guide
+I wrote a more thorough guide to Nginx where I've collected some of the resources we
+covered throughout the weeks. If you need another look at the Nginx system, I hope
+this will help you understand it better:
+
+[https://github.com/CphBusCosSem3/week2-network/blob/master/nginx.md](https://github.com/CphBusCosSem3/week2-network/blob/master/nginx.md)
+
 ## How to learn
 This repository is made to help you so we hope you can use the resources we give you.
 It is tremendously important, that you think about how you like to learn.
