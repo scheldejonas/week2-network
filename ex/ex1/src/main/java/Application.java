@@ -15,7 +15,7 @@ public class Application {
 
         // TODO: Run the udp server in a thread here
 
-        UdpServerThread udpServerThreadOne = new UdpServerThread(reentrantLock);
+        //// UdpServerThread udpServerThreadOne = new UdpServerThread(reentrantLock);
 
         // TODO: 2. Try to start the socket without the server. Do you get an exception? Why/Why not?
 
@@ -26,23 +26,23 @@ public class Application {
 
         // This Server is not built for being started more then once. There is no secureness of race conditions here, but there is ofcourse for recieving udp packets inside the server.
         // The reason is just for this test case, so this main can continue down and start the client and send a hell of packets.
-        udpServerThreadOne.start();
+        //// udpServerThreadOne.start();
 
         // Waiting a bit for the server to bind on the port and reach the pausing recieve method.
-        Thread.sleep(3*1000);
+        //// Thread.sleep(3*1000);
 
         ThreadFactory threadFactory = Executors.defaultThreadFactory();
 
         ExecutorService executorService = Executors.newFixedThreadPool(128,threadFactory);
 
         int counter = 0;
-        for (int i = 0; i < 50000; i++ ) {
+        for (int i = 0; i < 13000; i++ ) {
             executorService.submit(new UdpClientThread(reentrantLock));
         }
 
         executorService.shutdown();
 
-        //udpServerThreadOne.shutdownServer();
+        //// udpServerThreadOne.shutdownServer();
 
     }
 }

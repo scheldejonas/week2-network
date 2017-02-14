@@ -1,8 +1,5 @@
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetSocketAddress;
-import java.net.SocketException;
+import java.net.*;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -48,7 +45,7 @@ public class UdpClientThread implements Runnable {
 
             try {
                 DatagramSocket datagramSocketClient = new DatagramSocket();
-                datagramSocketClient.connect(new InetSocketAddress("localhost",8080));
+                datagramSocketClient.connect( new InetSocketAddress(Inet4Address.getByName("192.168.1.37"),8080) );
                 datagramSocketClient.send(datagramPacket);
             } catch (SocketException e) {
                 e.printStackTrace();
