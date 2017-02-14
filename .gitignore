@@ -3,6 +3,9 @@
 out
 *.iml
 
+target/
+nb-configuration.xml
+
 # Created by https://www.gitignore.io/api/netbeans,java
 
 ### NetBeans ###
@@ -36,3 +39,13 @@ solution/
 hs_err_pid*
 
 ex/.DS_Store
+
+ex/ex2/http-training/.gradle/3.1/taskArtifacts/taskArtifacts.bin
+
+ex/ex2/http-training/.gradle/3.1/taskArtifacts/cache.properties
+
+ex/ex2/http-training/.gradle/3.1/taskArtifacts/cache.properties.lock
+
+ex/ex2/http-training/.gradle/3.1/taskArtifacts/fileHashes.bin
+
+ex/ex2/http-training/.gradle/3.1/taskArtifacts/fileSnapshots.bin

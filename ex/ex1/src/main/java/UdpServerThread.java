@@ -60,10 +60,10 @@ public class UdpServerThread extends Thread {
 
         AtomicLong connectionsCounter = new AtomicLong(0);
 
+        System.out.printf("Server is listening on port: %s:%s \n",datagramSocket.getLocalAddress(),datagramSocket.getLocalPort() );
+
         try {
             while (true) {
-
-                //System.out.printf("Server is listening on port: %s:%s \n",datagramSocket.getLocalAddress(),datagramSocket.getLocalPort() );
 
                 connectionsCounter.getAndAdd(1);
 

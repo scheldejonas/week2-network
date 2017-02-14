@@ -28,6 +28,8 @@ public class Application {
         // The reason is just for this test case, so this main can continue down and start the client and send a hell of packets.
         //// udpServerThreadOne.start();
 
+
+
         // Waiting a bit for the server to bind on the port and reach the pausing recieve method.
         //// Thread.sleep(3*1000);
 
@@ -36,13 +38,21 @@ public class Application {
         ExecutorService executorService = Executors.newFixedThreadPool(128,threadFactory);
 
         int counter = 0;
+<<<<<<< HEAD
         for (int i = 0; i < 13000; i++ ) {
+=======
+        for (int i = 0; i < 20000; i++ ) {
+>>>>>>> origin/master
             executorService.submit(new UdpClientThread(reentrantLock));
         }
 
         executorService.shutdown();
 
+<<<<<<< HEAD
         //// udpServerThreadOne.shutdownServer();
+=======
+        udpServerThreadOne.shutdownServer();
+>>>>>>> origin/master
 
     }
 }
